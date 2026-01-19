@@ -53,4 +53,28 @@ class User extends Authenticatable
             'is_active' => 'boolean',
         ];
     }
+
+    // Relasi: user terkait dengan area
+    public function area()
+    {
+        return $this->belongsTo(Area::class);
+    }
+
+    // Relasi: user terkait dengan shift
+    public function shift()
+    {
+        return $this->belongsTo(Shift::class);
+    }
+
+    // Relasi: user sebagai karyawan punya banyak attendance
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'employee_id');
+    }
+
+    // Relasi: user sebagai supervisor punya banyak attendance session
+    public function supervisedSessions()
+    {
+        return $this->hasMany(AttendanceSession::class, 'supervisor_id');
+    }
 }
