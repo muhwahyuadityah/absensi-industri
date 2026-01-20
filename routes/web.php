@@ -38,6 +38,8 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard per role
     Route::middleware(['role:Admin'])->group(function () {
         Route::get('/admin/dashboard', [App\Http\Controllers\DashboardController::class, 'admin'])->name('admin.dashboard');
+
+        Route::get('/admin/laporan', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('admin.laporan');
     });
 
     Route::middleware(['role:Manager'])->group(function () {
