@@ -46,9 +46,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:Pengawas'])->group(function () {
         Route::get('/pengawas/dashboard', [App\Http\Controllers\DashboardController::class, 'pengawas'])->name('pengawas.dashboard');
+
+        Route::get('/pengawas/absensi/create', [App\Http\Controllers\Pengawas\AbsensiController::class, 'create'])->name('pengawas.absensi.create');
+        Route::post('/pengawas/absensi/store', [App\Http\Controllers\Pengawas\AbsensiController::class, 'store'])->name('pengawas.absensi.store');
     });
 
     Route::middleware(['role:Karyawan'])->group(function () {
         Route::get('/karyawan/dashboard', [App\Http\Controllers\DashboardController::class, 'karyawan'])->name('karyawan.dashboard');
+
+         // Route riwayat absensi
+    Route::get('/karyawan/riwayat', [App\Http\Controllers\Karyawan\RiwayatController::class, 'index'])->name('karyawan.riwayat');
     });
 });

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('supervisor_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('area_id')->nullable()->constrained('areas')->onDelete('set null');
             $table->foreignId('shift_id')->constrained('shifts')->onDelete('cascade');
-            $table->string('photo_path'); // path file foto grup
+            $table->string('photo_path')->nullable();// path file foto grup
             $table->decimal('latitude', 10, 8)->nullable(); // GPS koordinat
             $table->decimal('longitude', 11, 8)->nullable();
             $table->date('session_date'); // tanggal absensi (tanggal check-in)
