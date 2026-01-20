@@ -29,3 +29,26 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// Route setelah login
+Route::middleware(['auth'])->group(function () {
+    // Dashboard utama (redirect otomatis sesuai role)
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+
+    // Dashboard per role
+    Route::middleware(['role:Admin'])->group(function () {
+        Route::get('/admin/dashboard', [App\Http\Controllers\DashboardController::class, 'admin'])->name('admin.dashboard');
+    });
+
+    Route::middleware(['role:Manager'])->group(function () {
+        Route::get('/manager/dashboard', [App\Http\Controllers\DashboardController::class, 'manager'])->name('manager.dashboard');
+    });
+
+    Route::middleware(['role:Pengawas'])->group(function () {
+        Route::get('/pengawas/dashboard', [App\Http\Controllers\DashboardController::class, 'pengawas'])->name('pengawas.dashboard');
+    });
+
+    Route::middleware(['role:Karyawan'])->group(function () {
+        Route::get('/karyawan/dashboard', [App\Http\Controllers\DashboardController::class, 'karyawan'])->name('karyawan.dashboard');
+    });
+});
