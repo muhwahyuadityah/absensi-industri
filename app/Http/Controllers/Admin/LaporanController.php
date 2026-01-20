@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\AttendancesExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\AttendanceSession;
@@ -84,4 +86,58 @@ class LaporanController extends Controller
             'filters' => $request->all(),
         ]);
     }
+
+    public function export(Request $request)
+{
+    // Query yang sama dengan index (untuk konsistensi filter)
+    $query = Attendance::with(['employee', 'session.supervisor', 'session.area', 'session.shift']);
+
+    // Terapkan filter yang sama
+    if ($request->filled('tanggal_dari')) {
+        $query->whereHas('session', function($q) use ($request) {
+            $q->where('session_date', '>=', $request->tanggal_dari);
+        });
+    }
+
+    if ($request->filled('tanggal_sampai')) {
+        $query->whereHas('session', function($q) use ($request) {
+            $q->where('session_date', '<=', $request->tanggal_sampai);
+        });
+    }
+
+    if ($request->filled('shift_id')) {
+        $query->whereHas('session', function($q) use ($request) {
+            $q->where('shift_id', $request->shift_id);
+        });
+    }
+
+    if ($request->filled('area_id')) {
+        $query->whereHas('session', function($q) use ($request) {
+            $q->where('area_id', $request->area_id);
+        });
+    }
+
+    if ($request->filled('department')) {
+        $query->whereHas('employee', function($q) use ($request) {
+            $q->where('department', $request->department);
+        });
+    }
+
+    if ($request->filled('employee_id')) {
+        $query->where('employee_id', $request->employee_id);
+    }
+
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    // Ambil semua data (tidak pakai pagination)
+    $attendances = $query->orderBy('created_at', 'desc')->get();
+
+    // Generate filename dengan timestamp
+    $filename = 'Laporan_Absensi_' . now()->format('Y-m-d_His') . '.xlsx';
+
+    // Download Excel
+    return Excel::download(new AttendancesExport($attendances), $filename);
+}
 }

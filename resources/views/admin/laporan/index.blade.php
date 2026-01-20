@@ -13,7 +13,7 @@
                 <div class="p-6">
                     <h3 class="text-lg font-bold mb-4">Filter Laporan</h3>
                     
-                    <form method="GET" action="{{ route('admin.laporan') }}" class="space-y-4">
+                    <form method="GET" action="{{ auth()->user()->hasRole('Admin') ? route('admin.laporan') : route('manager.laporan') }}" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             
                             <!-- Tanggal Dari -->
@@ -87,7 +87,7 @@
                     <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition shadow-lg">
                         🔍 Filter Data
                     </button>
-                    <a href="{{ route('admin.laporan') }}" class="px-6 py-3 bg-gray-400 text-white rounded-lg font-bold hover:bg-gray-500 transition shadow-lg">
+                    <a href="{{ auth()->user()->hasRole('Admin') ? route('admin.laporan') : route('manager.laporan') }}" class="px-6 py-3 bg-gray-400 text-white rounded-lg font-bold hover:bg-gray-500 transition shadow-lg">
                         🔄 Reset Filter
                     </a>
                 </div>
@@ -128,9 +128,10 @@
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold">Data Absensi ({{ $attendances->total() }} record)</h3>
-                        <button class="px-6 py-3 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 transition shadow-lg">
-                            📊 Export Excel
-                        </button>
+                    <a href="{{ auth()->user()->hasRole('Admin') ? route('admin.laporan.export', request()->query()) : route('manager.laporan.export', request()->query()) }}" 
+                    class="px-6 py-3 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 transition shadow-lg inline-block">
+                        📊 Export Excel
+                    </a>
                     </div>
 
                     @if($attendances->count() == 0)

@@ -28,5 +28,11 @@
                 </div>
             </div>
         </div>
+        <div class="mt-6">
+    <a href="{{ route('manager.laporan') }}" 
+       class="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition">
+        Lihat Laporan Absensi
+    </a>
+</div>
     </div>
 </x-app-layout>

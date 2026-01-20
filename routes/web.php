@@ -40,10 +40,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/dashboard', [App\Http\Controllers\DashboardController::class, 'admin'])->name('admin.dashboard');
 
         Route::get('/admin/laporan', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('admin.laporan');
+        Route::get('/admin/laporan/export', [App\Http\Controllers\Admin\LaporanController::class, 'export'])->name('admin.laporan.export');
     });
 
     Route::middleware(['role:Manager'])->group(function () {
         Route::get('/manager/dashboard', [App\Http\Controllers\DashboardController::class, 'manager'])->name('manager.dashboard');
+
+        // Manager bisa akses laporan (menggunakan controller yang sama dengan Admin)
+    Route::get('/manager/laporan', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('manager.laporan');
+    Route::get('/manager/laporan/export', [App\Http\Controllers\Admin\LaporanController::class, 'export'])->name('manager.laporan.export');
     });
 
     Route::middleware(['role:Pengawas'])->group(function () {
