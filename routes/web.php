@@ -41,6 +41,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard utama (redirect otomatis sesuai role)
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::post('/profile/photo', [App\Http\Controllers\ProfileController::class, 'updatePhoto'])->name('profile.photo.update');
+    Route::delete('/profile/photo', [App\Http\Controllers\ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
+
     // Dashboard per role
     Route::middleware(['role:Admin'])->group(function () {
         Route::get('/admin/dashboard', [App\Http\Controllers\DashboardController::class, 'admin'])->name('admin.dashboard');
@@ -57,7 +63,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'destroy' => 'admin.users.destroy',
     ]);
     Route::post('/admin/users/{id}/restore', [App\Http\Controllers\Manager\UserManagementController::class, 'restore'])->name('admin.users.restore');
-    
+
     Route::post('/admin/users/{id}/resend-verification', function($id) {
         $user = \App\Models\User::findOrFail($id);
         
