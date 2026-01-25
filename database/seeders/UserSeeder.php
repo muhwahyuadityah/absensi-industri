@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin System',
             'email' => 'admin@imip.com',
             'password' => Hash::make('password'),
+            'email_verified_at' => now(),
             'employee_type' => 'NON_AREA',
             'area_id' => null,
             'shift_id' => null,
@@ -33,6 +34,7 @@ class UserSeeder extends Seeder
             'name' => 'Manager Produksi',
             'email' => 'manager@imip.com',
             'password' => Hash::make('password'),
+            'email_verified_at' => now(),
             'employee_type' => 'NON_AREA',
             'area_id' => null,
             'shift_id' => null,
@@ -48,6 +50,7 @@ class UserSeeder extends Seeder
             'name' => 'Pengawas IMIP 1',
             'email' => 'pengawas1@imip.com',
             'password' => Hash::make('password'),
+            'email_verified_at' => now(),
             'employee_type' => 'AREA_BASED',
             'area_id' => 1, // IMIP 1
             'shift_id' => 1, // Shift Pagi
@@ -63,6 +66,7 @@ class UserSeeder extends Seeder
             'name' => 'Pengawas IMIP 2',
             'email' => 'pengawas2@imip.com',
             'password' => Hash::make('password'),
+            'email_verified_at' => now(),
             'employee_type' => 'AREA_BASED',
             'area_id' => 2, // IMIP 2
             'shift_id' => 2, // Shift Malam
@@ -78,6 +82,7 @@ class UserSeeder extends Seeder
             'name' => 'Budi Santoso',
             'email' => 'budi@imip.com',
             'password' => Hash::make('password'),
+            'email_verified_at' => now(),
             'employee_type' => 'AREA_BASED',
             'area_id' => 1, // IMIP 1
             'shift_id' => 1, // Shift Pagi
@@ -93,6 +98,7 @@ class UserSeeder extends Seeder
             'name' => 'Andi Wijaya',
             'email' => 'andi@imip.com',
             'password' => Hash::make('password'),
+            'email_verified_at' => now(),
             'employee_type' => 'AREA_BASED',
             'area_id' => 1, // IMIP 1
             'shift_id' => 1, // Shift Pagi
@@ -108,6 +114,7 @@ class UserSeeder extends Seeder
             'name' => 'Siti Nurhaliza',
             'email' => 'siti@imip.com',
             'password' => Hash::make('password'),
+            'email_verified_at' => now(),
             'employee_type' => 'AREA_BASED',
             'area_id' => 1, // IMIP 1
             'shift_id' => 1, // Shift Pagi
@@ -123,6 +130,7 @@ class UserSeeder extends Seeder
             'name' => 'Joko Suprapto',
             'email' => 'joko@imip.com',
             'password' => Hash::make('password'),
+            'email_verified_at' => now(),
             'employee_type' => 'NON_AREA',
             'area_id' => null, // tidak terikat area
             'shift_id' => 1, // Shift Pagi (untuk contoh)

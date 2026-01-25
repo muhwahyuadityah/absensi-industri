@@ -30,8 +30,14 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
+// Route set password (setelah klik link verifikasi email)
+Route::get('/set-password/{id}', [App\Http\Controllers\Auth\SetPasswordController::class, 'show'])
+    ->name('password.set');
+Route::post('/set-password/{id}', [App\Http\Controllers\Auth\SetPasswordController::class, 'store'])
+    ->name('password.set.store');
+
 // Route setelah login
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard utama (redirect otomatis sesuai role)
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
@@ -41,7 +47,30 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/admin/laporan', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('admin.laporan');
         Route::get('/admin/laporan/export', [App\Http\Controllers\Admin\LaporanController::class, 'export'])->name('admin.laporan.export');
-    });
+
+     Route::resource('admin/users', App\Http\Controllers\Manager\UserManagementController::class)->names([
+        'index' => 'admin.users.index',
+        'create' => 'admin.users.create',
+        'store' => 'admin.users.store',
+        'edit' => 'admin.users.edit',
+        'update' => 'admin.users.update',
+        'destroy' => 'admin.users.destroy',
+    ]);
+    Route::post('/admin/users/{id}/restore', [App\Http\Controllers\Manager\UserManagementController::class, 'restore'])->name('admin.users.restore');
+    
+    Route::post('/admin/users/{id}/resend-verification', function($id) {
+        $user = \App\Models\User::findOrFail($id);
+        
+        if ($user->hasVerifiedEmail()) {
+            return back()->with('info', 'User ini sudah terverifikasi.');
+        }
+        
+        $user->sendEmailVerificationNotification();
+        
+        return back()->with('success', 'Email verifikasi berhasil dikirim ulang ke ' . $user->email);
+    })->name('verification.resend.manual');
+
+});
 
     Route::middleware(['role:Manager'])->group(function () {
         Route::get('/manager/dashboard', [App\Http\Controllers\DashboardController::class, 'manager'])->name('manager.dashboard');
@@ -49,6 +78,28 @@ Route::middleware(['auth'])->group(function () {
         // Manager bisa akses laporan (menggunakan controller yang sama dengan Admin)
     Route::get('/manager/laporan', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('manager.laporan');
     Route::get('/manager/laporan/export', [App\Http\Controllers\Admin\LaporanController::class, 'export'])->name('manager.laporan.export');
+    // User Management
+    Route::resource('manager/users', App\Http\Controllers\Manager\UserManagementController::class)->names([
+        'index' => 'manager.users.index',
+        'create' => 'manager.users.create',
+        'store' => 'manager.users.store',
+        'edit' => 'manager.users.edit',
+        'update' => 'manager.users.update',
+        'destroy' => 'manager.users.destroy',
+    ]);
+    Route::post('/manager/users/{id}/restore', [App\Http\Controllers\Manager\UserManagementController::class, 'restore'])->name('manager.users.restore');
+
+    Route::post('/manager/users/{id}/resend-verification', function($id) {
+        $user = \App\Models\User::findOrFail($id);
+        
+        if ($user->hasVerifiedEmail()) {
+            return back()->with('info', 'User ini sudah terverifikasi.');
+        }
+        
+        $user->sendEmailVerificationNotification();
+        
+        return back()->with('success', 'Email verifikasi berhasil dikirim ulang ke ' . $user->email);
+    })->name('verification.resend.manual');
     });
 
     Route::middleware(['role:Pengawas'])->group(function () {
@@ -65,3 +116,4 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/karyawan/riwayat', [App\Http\Controllers\Karyawan\RiwayatController::class, 'index'])->name('karyawan.riwayat');
     });
 });
+
